@@ -15,6 +15,7 @@
   document.querySelectorAll('.reel-frame').forEach((frame) => {
     const video = frame.querySelector('video');
     const button = frame.querySelector('.sound-toggle');
+    if (!video || !button) return;  // a still frame, nothing to play
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { video.removeAttribute('autoplay'); video.pause(); }
     button.addEventListener('click', () => {
@@ -35,6 +36,8 @@
   const html = document.documentElement;
   const textNodes = [...document.querySelectorAll('[data-en]')];
   const labelNodes = [...document.querySelectorAll('[data-en-label]')];
+  const altNodes = [...document.querySelectorAll('[data-en-alt]')];
+  altNodes.forEach((el) => { el.dataset.arAlt = el.alt; });
   textNodes.forEach((el) => { el.dataset.ar = el.innerHTML; });
   labelNodes.forEach((el) => { el.dataset.arLabel = el.getAttribute('aria-label'); });
   const titles = { ar: document.title, en: 'Maven | Free Claude skills' };
@@ -45,6 +48,7 @@
     html.dir = en ? 'ltr' : 'rtl';
     textNodes.forEach((el) => { el.innerHTML = en ? el.dataset.en : el.dataset.ar; });
     labelNodes.forEach((el) => el.setAttribute('aria-label', en ? el.dataset.enLabel : el.dataset.arLabel));
+    altNodes.forEach((el) => { el.alt = en ? el.dataset.enAlt : el.dataset.arAlt; });
     const sw = document.querySelector('.language-switch');
     sw.lang = en ? 'ar' : 'en';
     document.title = titles[lang];
